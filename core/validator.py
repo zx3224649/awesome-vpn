@@ -11,8 +11,18 @@ import requests
 import platform
 import shutil
 
-TEST_URLS = [
-    'http://www.google.com/generate_204',
+# 国内网站用于验证（GitHub Actions在国外，直连这些应该很慢或不通）
+TEST_URLS_CN = [
+    'http://www.baidu.com',
+    'http://www.163.com', 
+    'http://www.qq.com',
+]
+
+# IP检测服务
+IP_CHECK_URLS = [
+    'http://ipinfo.io/ip',
+    'http://api.ipify.org',
+    'http://checkip.amazonaws.com',
 ]
 
 class Validator:
@@ -28,6 +38,22 @@ class Validator:
             print(f"Validator: sing-box binary not found. Validation will be skipped.")
         
         self.logger = logging.getLogger('Validator')
+        # 获取本机原始IP作为基准
+        self.original_ip = self._get_original_ip()
+        print(f"Validator: Original IP (GitHub Actions): {self.original_ip}")
+
+    def _get_original_ip(self):
+        """获取当前机器的真实IP（不经过代理）"""
+        for url in IP_CHECK_URLS:
+            try:
+                resp = requests.get(url, timeout=5)
+                if resp.status_code == 200:
+                    ip = resp.text.strip()
+                    if ip:
+                        return ip
+            except:
+                continue
+        return None
 
     def _find_sing_box(self):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -66,18 +92,17 @@ class Validator:
         except:
             return False
 
-    def validate_nodes_parallel(self, nodes, timeout=5, max_workers=5):
-        """
-        Validate multiple nodes in parallel
-        """
+    def validate_nodes_parallel(self, nodes, timeout=5, max_workers=50):
         if not self.sing_box_path or not os.path.exists(self.sing_box_path):
             print(f"Warning: sing-box not available, skipping validation. All {len(nodes)} nodes will be kept.")
             return nodes
         
         valid_nodes = []
-        print(f"Starting parallel validation for {len(nodes)} nodes with {max_workers} threads...")
+        print(f"Starting strict validation for {len(nodes)} nodes with {max_workers} threads...")
+        print(f"Validation criteria: 1) IP must change 2) Must access CN websites")
+        
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-            future_to_node = {executor.submit(self.validate_node, node, timeout): node for node in nodes}
+            future_to_node = {executor.submit(self.validate_node_strict, node, timeout): node for node in nodes}
             for i, future in enumerate(concurrent.futures.as_completed(future_to_node)):
                 node = future_to_node[future]
                 try:
@@ -87,12 +112,15 @@ class Validator:
                     pass
                 if (i + 1) % 50 == 0:
                     print(f"Validated {i + 1}/{len(nodes)} nodes, {len(valid_nodes)} valid so far...")
+        
+        print(f"Validation complete: {len(valid_nodes)}/{len(nodes)} nodes passed strict checks")
         return valid_nodes
 
-    def validate_node(self, node, timeout=5):
+    def validate_node_strict(self, node, timeout=5):
         """
-        Validate a single node by starting sing-box and testing through it.
-        The test verifies that the proxy connection works, regardless of direct connectivity.
+        严格验证：
+        1. 通过代理获取出口IP，必须与本机IP不同（确保流量走了代理）
+        2. 通过代理访问国内网站，必须能通（确保可访问CN）
         """
         if not self.sing_box_path or not os.path.exists(self.sing_box_path):
             return True
@@ -100,7 +128,7 @@ class Validator:
         server = node.get('server')
         port = node.get('server_port') or node.get('port')
         if server and port:
-            if not self.tcp_ping(server, port, timeout=3):
+            if not self.tcp_ping(server, port, timeout=2):
                 return False
 
         node_config = node.copy()
@@ -157,24 +185,47 @@ class Validator:
             
             if proc.poll() is not None:
                 return False
-                
+            
             proxies = {
                 'http': f'socks5://127.0.0.1:{listen_port}',
                 'https': f'socks5://127.0.0.1:{listen_port}'
             }
             
-            success = False
-            
-            for target_url in TEST_URLS:
+            # === 严格验证 1: 出口IP必须变化 ===
+            ip_changed = False
+            proxy_ip = None
+            for ip_url in IP_CHECK_URLS:
                 try:
-                    resp = requests.get(target_url, proxies=proxies, timeout=timeout)
-                    if resp.status_code == 204:
-                        success = True
+                    resp = requests.get(ip_url, proxies=proxies, timeout=timeout)
+                    if resp.status_code == 200:
+                        proxy_ip = resp.text.strip()
+                        if proxy_ip and proxy_ip != self.original_ip:
+                            ip_changed = True
+                            break
+                except:
+                    continue
+            
+            if not ip_changed:
+                # IP没变，说明代理没生效或节点无效
+                return False
+            
+            # === 严格验证 2: 必须能访问国内网站 ===
+            can_access_cn = False
+            for cn_url in TEST_URLS_CN:
+                try:
+                    resp = requests.get(cn_url, proxies=proxies, timeout=timeout, allow_redirects=True)
+                    if resp.status_code == 200:
+                        can_access_cn = True
                         break
                 except:
-                    pass
+                    continue
             
-            return success
+            if not can_access_cn:
+                # 不能访问国内网站，对很多用户来说没用
+                return False
+            
+            # 两个条件都满足才算有效
+            return True
                 
         except Exception as e:
             return False
