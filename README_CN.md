@@ -12,9 +12,9 @@
 
 | 格式 | 链接 | 适用客户端 |
 |------|------|-----------|
-| **通用格式** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/main/all` | v2rayN、V2RayNG、Shadowrocket |
-| **Sing-box** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/main/sing-box.json` | Sing-box、NekoBox |
-| **Clash** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/main/clash.yaml` | Clash Verge、ClashX |
+| **通用格式** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all` | v2rayN、V2RayNG、Shadowrocket |
+| **Sing-box** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/sing-box.json` | Sing-box、NekoBox |
+| **Clash** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/clash.yaml` | Clash Verge、ClashX |
 
 > 💡 **不知道选哪个？** 用**通用格式**，大多数软件都支持。
 
@@ -43,8 +43,8 @@
 
 | 镜像 | 链接 | 位置 |
 |------|------|------|
-| **KKGitHub** | `https://raw.kkgithub.com/awesome-vpn/awesome-vpn/main/all` | 香港 |
-| **GHProxy** | `https://ghproxy.net/https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/main/all` | 日本 |
+| **KKGitHub** | `https://raw.kkgithub.com/awesome-vpn/awesome-vpn/master/all` | 香港 |
+| **GHProxy** | `https://ghproxy.net/https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all` | 日本 |
 
 ---
 
