@@ -12,9 +12,9 @@
 
 | Format | Link | Best For |
 |--------|------|----------|
-| **Universal** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/main/all` | v2rayN, V2RayNG, Shadowrocket |
-| **Sing-box** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/main/sing-box.json` | Sing-box, NekoBox |
-| **Clash** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/main/clash.yaml` | Clash Verge, ClashX |
+| **Universal** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all` | v2rayN, V2RayNG, Shadowrocket |
+| **Sing-box** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/sing-box.json` | Sing-box, NekoBox |
+| **Clash** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/clash.yaml` | Clash Verge, ClashX |
 
 > 💡 **Don't know which one?** Use the **Universal** link. It works with most apps.
 
@@ -43,8 +43,8 @@ If GitHub is slow in your region, try these mirrors:
 
 | Mirror | Link | Location |
 |--------|------|----------|
-| **KKGitHub** | `https://raw.kkgithub.com/awesome-vpn/awesome-vpn/main/all` | Hong Kong |
-| **GHProxy** | `https://ghproxy.net/https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/main/all` | Japan |
+| **KKGitHub** | `https://raw.kkgithub.com/awesome-vpn/awesome-vpn/master/all` | Hong Kong |
+| **GHProxy** | `https://ghproxy.net/https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all` | Japan |
 
 ---
 
