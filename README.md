@@ -22,10 +22,11 @@
 
 | Platform | Recommended App | Download |
 |----------|----------------|----------|
-| **Windows** | v2rayN | [GitHub](https://github.com/2dust/v2rayN/releases) |
-| **macOS** | V2RayXS / V2RayU | [GitHub](https://github.com/tzmax/V2RayXS/releases) |
-| **iOS** | Shadowrocket / Streisand | App Store (paid) |
-| **Android** | v2rayNG / NekoBox | [GitHub](https://github.com/2dust/v2rayNG/releases) |
+| **Windows** | v2rayN / Clash Verge Rev | [v2rayN](https://github.com/2dust/v2rayN/releases) / [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev/releases) |
+| **macOS** | Clash Verge Rev | [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev/releases) |
+| **Linux** | v2rayA / Clash Verge Rev | [v2rayA](https://github.com/v2rayA/v2rayA/releases) / [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev/releases) |
+| **iOS (Free)** | Streisand | [GitHub](https://github.com/MatsuriDayo/Streisand) |
+| **Android** | v2rayNG / Sing-box | [v2rayNG](https://github.com/2dust/v2rayNG/releases) / [Sing-box](https://github.com/SagerNet/sing-box/releases) |
 
 ### Step 3: Paste and connect
 
@@ -70,9 +71,9 @@ Possible reasons:
 ### Q: Which format should I use?
 | If your app is... | Use this format |
 |-------------------|-----------------|
-| v2rayN, v2rayNG, Shadowrocket, Quantumult X | **Base64 List** |
-| Sing-box, NekoBox, SFI | **Sing-box JSON** |
-| Clash Verge, ClashX, Clash for Windows | **Clash YAML** |
+| v2rayN, v2rayNG, v2rayA, Streisand | **Base64 List** |
+| Clash Verge Rev, ClashX | **Clash YAML** |
+| Sing-box | **Sing-box JSON** |
 
 ---
 

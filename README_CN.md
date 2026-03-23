@@ -12,9 +12,9 @@
 
 | 格式 | 链接 | 适用客户端 |
 |------|------|-----------|
-| **Base64 列表** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all` | v2rayN、V2RayNG、Shadowrocket |
-| **Sing-box** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/sing-box.json` | Sing-box、NekoBox |
-| **Clash** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/clash.yaml` | Clash Verge、ClashX |
+| **Base64 列表** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all` | v2rayN、v2rayNG、Streisand |
+| **Sing-box JSON** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/sing-box.json` | Sing-box |
+| **Clash YAML** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/clash.yaml` | Clash Verge Rev、ClashX |
 
 > 💡 **不知道选哪个？** 用**Base64 列表**，大多数软件都支持。
 
@@ -22,10 +22,11 @@
 
 | 系统 | 推荐软件 | 下载地址 |
 |------|---------|----------|
-| **Windows** | v2rayN | [GitHub下载](https://github.com/2dust/v2rayN/releases) |
-| **macOS** | V2RayXS / V2RayU | [GitHub下载](https://github.com/tzmax/V2RayXS/releases) |
-| **iOS** | Shadowrocket / Streisand | App Store（付费） |
-| **安卓** | v2rayNG / NekoBox | [GitHub下载](https://github.com/2dust/v2rayNG/releases) |
+| **Windows** | v2rayN / Clash Verge Rev | [v2rayN下载](https://github.com/2dust/v2rayN/releases) / [Clash Verge Rev下载](https://github.com/clash-verge-rev/clash-verge-rev/releases) |
+| **macOS** | Clash Verge Rev | [Clash Verge Rev下载](https://github.com/clash-verge-rev/clash-verge-rev/releases) |
+| **Linux** | v2rayA / Clash Verge Rev | [v2rayA下载](https://github.com/v2rayA/v2rayA/releases) / [Clash Verge Rev下载](https://github.com/clash-verge-rev/clash-verge-rev/releases) |
+| **iOS (免费)** | Streisand | [GitHub](https://github.com/MatsuriDayo/Streisand) |
+| **安卓** | v2rayNG / Sing-box | [v2rayNG下载](https://github.com/2dust/v2rayNG/releases) / [Sing-box下载](https://github.com/SagerNet/sing-box/releases) |
 
 ### 第三步：粘贴使用
 
@@ -70,9 +71,9 @@
 ### Q：我应该用哪种格式？
 | 如果你的软件是... | 用这个格式 |
 |------------------|-----------|
-| v2rayN、v2rayNG、Shadowrocket、圈X | **Base64 列表** |
-| Sing-box、NekoBox、SFI | **Sing-box** |
-| Clash Verge、ClashX、CFW | **Clash** |
+| v2rayN、v2rayNG、v2rayA、Streisand | **Base64 列表** |
+| Clash Verge Rev、ClashX | **Clash YAML** |
+| Sing-box | **Sing-box JSON** |
 
 ---
 
