@@ -12,11 +12,11 @@
 
 | 格式 | 链接 | 适用客户端 |
 |------|------|-----------|
-| **通用格式** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all` | v2rayN、V2RayNG、Shadowrocket |
+| **Base64 列表** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all` | v2rayN、V2RayNG、Shadowrocket |
 | **Sing-box** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/sing-box.json` | Sing-box、NekoBox |
 | **Clash** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/clash.yaml` | Clash Verge、ClashX |
 
-> 💡 **不知道选哪个？** 用**通用格式**，大多数软件都支持。
+> 💡 **不知道选哪个？** 用**Base64 列表**，大多数软件都支持。
 
 ### 第二步：下载客户端软件
 
@@ -70,7 +70,7 @@
 ### Q：我应该用哪种格式？
 | 如果你的软件是... | 用这个格式 |
 |------------------|-----------|
-| v2rayN、v2rayNG、Shadowrocket、圈X | **通用格式** |
+| v2rayN、v2rayNG、Shadowrocket、圈X | **Base64 列表** |
 | Sing-box、NekoBox、SFI | **Sing-box** |
 | Clash Verge、ClashX、CFW | **Clash** |
 
@@ -97,7 +97,7 @@
 1. 从 [GitHub](https://github.com/2dust/v2rayN/releases) 下载并解压
 2. 运行 `v2rayN.exe`
 3. 点击 **订阅** → **订阅设置**
-4. 粘贴通用格式链接，点击 **添加** → **确定**
+4. 粘贴Base64 列表链接，点击 **添加** → **确定**
 5. 点击 **订阅** → **更新订阅**
 6. 右键选择一个服务器 → **设为活动服务器**
 7. 点击 **系统代理** → **自动配置系统代理**
@@ -108,7 +108,7 @@
 
 1. 从 [GitHub](https://github.com/2dust/v2rayNG/releases) 下载安装
 2. 点击右上角 **+** → **从剪贴板导入**（或「从URL导入」）
-3. 粘贴通用格式链接，点击 **导入**
+3. 粘贴Base64 列表链接，点击 **导入**
 4. 点击右上角菜单（⋮）→ **更新订阅**
 5. 点击选择一个服务器
 6. 点击底部 **V** 按钮连接
@@ -119,7 +119,7 @@
 
 1. 在 App Store 购买 Shadowrocket（约¥20）
 2. 点击右上角 **+** → **类型选择「Subscribe」**
-3. 在 **URL** 栏粘贴通用格式链接
+3. 在 **URL** 栏粘贴Base64 列表链接
 4. 点击 **保存**，然后点击订阅更新
 5. 选择服务器，点击连接按钮
 </details>
