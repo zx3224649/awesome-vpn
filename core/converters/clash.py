@@ -194,10 +194,29 @@ CONVERTERS = {
 
 
 def to_clash_proxies(nodes: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """Convert a list of sing-box nodes to Clash proxies."""
+    """Convert a list of sing-box nodes to Clash proxies with unique names."""
     result = []
+    used_names = set()
+    name_counter = {}
+    
     for node in nodes:
         proxy = to_clash_proxy(node)
-        if proxy:
-            result.append(proxy)
+        if not proxy:
+            continue
+            
+        name = proxy.get("name", "unnamed")
+        
+        # Handle duplicate names by adding suffix
+        if name in used_names:
+            if name not in name_counter:
+                name_counter[name] = 1
+            name_counter[name] += 1
+            new_name = f"{name}-{name_counter[name]}"
+            proxy["name"] = new_name
+            used_names.add(new_name)
+        else:
+            used_names.add(name)
+        
+        result.append(proxy)
+    
     return result
