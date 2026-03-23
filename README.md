@@ -12,11 +12,11 @@
 
 | Format | Link | Best For |
 |--------|------|----------|
-| **Universal** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all` | v2rayN, V2RayNG, Shadowrocket |
-| **Sing-box** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/sing-box.json` | Sing-box, NekoBox |
-| **Clash** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/clash.yaml` | Clash Verge, ClashX |
+| **Base64 List** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/all` | v2rayN, V2RayNG, Shadowrocket |
+| **Sing-box JSON** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/sing-box.json` | Sing-box, NekoBox |
+| **Clash YAML** | `https://raw.githubusercontent.com/awesome-vpn/awesome-vpn/master/clash.yaml` | Clash Verge, ClashX |
 
-> 💡 **Don't know which one?** Use the **Universal** link. It works with most apps.
+> 💡 **Don't know which one?** Use the Base64 List. It works with most apps.
 
 ### Step 2: Download a client app
 
@@ -57,7 +57,7 @@ If GitHub is slow in your region, try these mirrors:
 Possible reasons:
 - **Node expired**: Wait for the next daily update (UTC 00:00)
 - **Network blocked**: Try a different mirror link
-- **Client issue**: Make sure you're using the correct format (Universal/Sing-box/Clash)
+- **Client issue**: Make sure you're using the correct format (Base64 List/Sing-box JSON/Clash YAML)
 
 ### Q: Is it safe?
 - These are **public nodes** from the internet
@@ -70,9 +70,9 @@ Possible reasons:
 ### Q: Which format should I use?
 | If your app is... | Use this format |
 |-------------------|-----------------|
-| v2rayN, v2rayNG, Shadowrocket, Quantumult X | **Universal** |
-| Sing-box, NekoBox, SFI | **Sing-box** |
-| Clash Verge, ClashX, Clash for Windows | **Clash** |
+| v2rayN, v2rayNG, Shadowrocket, Quantumult X | **Base64 List** |
+| Sing-box, NekoBox, SFI | **Sing-box JSON** |
+| Clash Verge, ClashX, Clash for Windows | **Clash YAML** |
 
 ---
 
@@ -97,7 +97,7 @@ Possible reasons:
 1. Download from [GitHub releases](https://github.com/2dust/v2rayN/releases)
 2. Extract and run `v2rayN.exe`
 3. Click **Subscription** → **Subscription Settings**
-4. Paste the Universal link, click **Add** → **OK**
+4. Paste the Base64 List link, click **Add** → **OK**
 5. Click **Subscription** → **Update Subscription**
 6. Right-click a server → **Set as active server**
 7. Click **System Proxy** → **Auto configure system proxy**
@@ -108,7 +108,7 @@ Possible reasons:
 
 1. Download from [GitHub releases](https://github.com/2dust/v2rayNG/releases)
 2. Tap **+** button → **Import from URL**
-3. Paste the Universal link, tap **Import**
+3. Paste the Base64 List link, tap **Import**
 4. Tap the menu (⋮) → **Update subscription**
 5. Tap a server to select it
 6. Tap the **V** button to connect
@@ -119,7 +119,7 @@ Possible reasons:
 
 1. Buy Shadowrocket from App Store (~$2.99)
 2. Tap **+** → **Type: Subscribe**
-3. Paste the Universal link in **URL** field
+3. Paste the Base64 List link in **URL** field
 4. Tap **Save**, then tap the subscription to update
 5. Select a server and tap the connect button
 </details>
@@ -129,7 +129,7 @@ Possible reasons:
 
 1. Download from [sing-box releases](https://github.com/SagerNet/sing-box/releases)
 2. Click **Profiles** → **+** → **Remote Profile**
-3. Paste the **Sing-box** format link
+3. Paste the Sing-box JSON link
 4. Click **Create** → **Connect**
 </details>
 
