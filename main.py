@@ -156,7 +156,8 @@ def main():
     parser = argparse.ArgumentParser(description='SingBox Node Crawler')
     parser.add_argument('--validate', action='store_true', help='Validate nodes')
     parser.add_argument('--output', type=str, default='output', help='Output directory')
-    parser.add_argument('--workers', type=int, default=10, help='Number of workers')
+    parser.add_argument('--workers', type=int, default=10, help='Number of fetch workers')
+    parser.add_argument('--validate-workers', type=int, default=20, help='Number of validation workers')
     args = parser.parse_args()
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -228,10 +229,16 @@ def main():
             all_links.extend(links)
 
     logger.info("\n[3/5] Fetching Telegram channels...")
-    for channel in telegram_channels:
+
+    def _fetch_channel(channel):
         links, _ = spider.fetch_telegram(channel)
-        logger.info(f"      @{channel}: {len(links)} links")
-        all_links.extend(links)
+        return channel, links
+
+    tg_workers = min(args.workers, len(telegram_channels)) if telegram_channels else 1
+    with concurrent.futures.ThreadPoolExecutor(max_workers=tg_workers) as executor:
+        for channel, links in executor.map(_fetch_channel, telegram_channels):
+            logger.info(f"      @{channel}: {len(links)} links")
+            all_links.extend(links)
 
     logger.info("\n[4/5] Processing sources.list...")
     list_path = os.path.join(base_dir, 'config', 'sources.list')
@@ -308,7 +315,7 @@ def main():
         bm = BinaryManager(base_dir)
         sing_box_path = bm.get_singbox_path()
         validator = Validator(sing_box_path)
-        valid_nodes = validator.validate_nodes_parallel(valid_nodes, timeout=5, max_workers=5)
+        valid_nodes = validator.validate_nodes_parallel(valid_nodes, timeout=5, max_workers=args.validate_workers)
         logger.info(f"Valid nodes: {len(valid_nodes)}")
 
         logger.info("\nUpdating node names with geo information...")
