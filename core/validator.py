@@ -10,20 +10,26 @@ import logging
 import requests
 import platform
 import shutil
+import socket
 
-# 国内网站用于验证（GitHub Actions在国外，直连这些应该很慢或不通）
-TEST_URLS_CN = [
-    'http://www.baidu.com',
-    'http://www.163.com', 
-    'http://www.qq.com',
+# 被墙网站用于验证（梯子必须能访问这些）
+TEST_URLS_GFW = [
+    'http://www.google.com/generate_204',
+    'http://www.youtube.com',
+    'http://twitter.com',
+    'http://facebook.com',
 ]
 
 # IP检测服务
 IP_CHECK_URLS = [
     'http://ipinfo.io/ip',
     'http://api.ipify.org',
-    'http://checkip.amazonaws.com',
 ]
+
+# UDP测试目标（用于hysteria2/tuic）
+UDP_TEST_HOST = '8.8.8.8'
+UDP_TEST_PORT = 53
+
 
 class Validator:
     def __init__(self, sing_box_path=None):
@@ -38,7 +44,6 @@ class Validator:
             print(f"Validator: sing-box binary not found. Validation will be skipped.")
         
         self.logger = logging.getLogger('Validator')
-        # 获取本机原始IP作为基准
         self.original_ip = self._get_original_ip()
         print(f"Validator: Original IP (GitHub Actions): {self.original_ip}")
 
@@ -85,10 +90,28 @@ class Validator:
         return None
 
     def tcp_ping(self, host, port, timeout=3):
-        import socket
         try:
             with socket.create_connection((host, int(port)), timeout=timeout):
                 return True
+        except:
+            return False
+
+    def check_udp_support(self, listen_port, timeout=3):
+        """
+        检测SOCKS5代理是否支持UDP转发
+        hysteria2/tuic必须支持UDP
+        """
+        try:
+            import socks
+            s = socks.socksocket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.set_proxy(socks.SOCKS5, '127.0.0.1', listen_port)
+            s.settimeout(timeout)
+            # 发送DNS查询测试UDP
+            dns_query = b'\x00\x00\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00\x03www\x06google\x03com\x00\x00\x01\x00\x01'
+            s.sendto(dns_query, (UDP_TEST_HOST, UDP_TEST_PORT))
+            data, addr = s.recvfrom(1024)
+            s.close()
+            return len(data) > 0
         except:
             return False
 
@@ -98,11 +121,15 @@ class Validator:
             return nodes
         
         valid_nodes = []
-        print(f"Starting strict validation for {len(nodes)} nodes with {max_workers} threads...")
-        print(f"Validation criteria: 1) IP must change 2) Must access CN websites")
+        print(f"Starting ULTRA strict validation for {len(nodes)} nodes with {max_workers} threads...")
+        print(f"Validation criteria:")
+        print(f"  1) IP must change (≠ {self.original_ip})")
+        print(f"  2) Must access GFW-blocked sites (Google/YouTube/Twitter)")
+        print(f"  3) hysteria2/tuic must support UDP")
+        print(f"  4) Latency < 3000ms")
         
         with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-            future_to_node = {executor.submit(self.validate_node_strict, node, timeout): node for node in nodes}
+            future_to_node = {executor.submit(self.validate_node_ultra_strict, node, timeout): node for node in nodes}
             for i, future in enumerate(concurrent.futures.as_completed(future_to_node)):
                 node = future_to_node[future]
                 try:
@@ -113,20 +140,25 @@ class Validator:
                 if (i + 1) % 50 == 0:
                     print(f"Validated {i + 1}/{len(nodes)} nodes, {len(valid_nodes)} valid so far...")
         
-        print(f"Validation complete: {len(valid_nodes)}/{len(nodes)} nodes passed strict checks")
+        print(f"Validation complete: {len(valid_nodes)}/{len(nodes)} nodes passed ultra-strict checks")
         return valid_nodes
 
-    def validate_node_strict(self, node, timeout=5):
+    def validate_node_ultra_strict(self, node, timeout=5):
         """
-        严格验证：
-        1. 通过代理获取出口IP，必须与本机IP不同（确保流量走了代理）
-        2. 通过代理访问国内网站，必须能通（确保可访问CN）
+        超严格验证（梯子专用）：
+        1. TCP 连通性
+        2. 出口IP ≠ 原始IP
+        3. 能访问被墙网站（Google/YouTube/Twitter至少一个）
+        4. hysteria2/tuic 必须UDP通
+        5. 延迟 < 3000ms
         """
         if not self.sing_box_path or not os.path.exists(self.sing_box_path):
             return True
 
         server = node.get('server')
         port = node.get('server_port') or node.get('port')
+        node_type = node.get('type', '').lower()
+        
         if server and port:
             if not self.tcp_ping(server, port, timeout=2):
                 return False
@@ -191,9 +223,8 @@ class Validator:
                 'https': f'socks5://127.0.0.1:{listen_port}'
             }
             
-            # === 严格验证 1: 出口IP必须变化 ===
+            # === 验证 1: 出口IP必须变化 ===
             ip_changed = False
-            proxy_ip = None
             for ip_url in IP_CHECK_URLS:
                 try:
                     resp = requests.get(ip_url, proxies=proxies, timeout=timeout)
@@ -206,25 +237,44 @@ class Validator:
                     continue
             
             if not ip_changed:
-                # IP没变，说明代理没生效或节点无效
                 return False
             
-            # === 严格验证 2: 必须能访问国内网站 ===
-            can_access_cn = False
-            for cn_url in TEST_URLS_CN:
+            # === 验证 2: 必须能访问被墙网站（梯子核心功能）===
+            can_access_gfw = False
+            latency_ok = False
+            
+            for gfw_url in TEST_URLS_GFW:
                 try:
-                    resp = requests.get(cn_url, proxies=proxies, timeout=timeout, allow_redirects=True)
-                    if resp.status_code == 200:
-                        can_access_cn = True
-                        break
+                    start = time.time()
+                    resp = requests.get(gfw_url, proxies=proxies, timeout=timeout, allow_redirects=True)
+                    latency = time.time() - start
+                    
+                    if resp.status_code in [200, 204, 301, 302]:
+                        can_access_gfw = True
+                        if latency < 3.0:  # 3秒延迟限制
+                            latency_ok = True
+                            break
                 except:
                     continue
             
-            if not can_access_cn:
-                # 不能访问国内网站，对很多用户来说没用
+            if not can_access_gfw:
                 return False
             
-            # 两个条件都满足才算有效
+            if not latency_ok:
+                return False
+            
+            # === 验证 3: UDP支持（hysteria2/tuic必须）===
+            if node_type in ['hysteria2', 'hy2', 'tuic']:
+                # 尝试安装PySocks进行UDP测试
+                try:
+                    import socks
+                    udp_ok = self.check_udp_support(listen_port, timeout=3)
+                    if not udp_ok:
+                        return False
+                except ImportError:
+                    # 没有PySocks，跳过UDP测试但打警告
+                    print(f"Warning: PySocks not installed, skipping UDP check for {node_type} node")
+            
             return True
                 
         except Exception as e:
