@@ -52,11 +52,12 @@ jobs:
 
     - name: Run Crawler
       env:
-        TELEGRAM_CHANNELS: ${{ secrets.TELEGRAM_CHANNELS }}
+        TELEGRAM_CHANNELS: ${{ secrets.TLEGRAM_CHANNELS }}
         EXTRA_URLS: ${{ secrets.EXTRA_URLS }}
         SING_BOX_VERSION: ${{ env.SING_BOX_VERSION }}
       run: |
-        python main.py --validate --workers 10 --validate-workers 20 --output .
+        # workers=24 for TG fetch, validate-workers=50 for high concurrent validation
+        python main.py --validate --workers 24 --validate-workers 50 --output .
 
     - name: Verify Outputs
       run: |
